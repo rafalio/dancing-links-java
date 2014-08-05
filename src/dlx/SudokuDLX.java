@@ -110,7 +110,7 @@ public class SudokuDLX{
 
         int N = grid.length;
 
-        boolean[] b = new boolean[N];
+        boolean[] b = new boolean[N+1];
 
         for(int i = 0; i < N; i++){
             for(int j = 0; j < N; j++){
@@ -148,7 +148,6 @@ public class SudokuDLX{
                 Arrays.fill(b, false);
             }
         }
-
         return true;
     }
 
@@ -163,6 +162,12 @@ public class SudokuDLX{
         side = S / 3;
         int[][] sudoku = fromCharArr(s);
         return solve(sudoku);
+    }
+    
+    public void generateAllSolutions(){ // starts printing ALL valid sudokus. Obviously you'll have to abort
+        int[][] cover = sudokuExactCover();
+        DancingLinks dlx = new DancingLinks(cover, new SudokuHandler(S));
+        dlx.runSolver();
     }
 
     private boolean solve(int[][] sudoku){
