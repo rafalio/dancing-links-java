@@ -20,7 +20,7 @@ public class Examples{
                 "..7...24.", ".64.1.59.", ".98...3..", "...8.3.2.",
                 "........6", "...2759.." };
         
-        int[][] aSudoku = {
+        int[][] hardest = {
                 {8,0,0,0,0,0,0,0,0},
                 {0,0,3,6,0,0,0,0,0},
                 {0,7,0,0,9,0,2,0,0},
@@ -34,9 +34,10 @@ public class Examples{
         
         
         SudokuDLX sudoku = new SudokuDLX();
-        sudoku.runSolver(exampleSudoku);
+        sudoku.solve(hardest);
         
-        sudoku.runSolver(aSudoku);
+        NaiveSudokuSolver naive = new NaiveSudokuSolver();
+        naive.solve(hardest);
     }
 
     public static void main(String[] args){

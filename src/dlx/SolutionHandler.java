@@ -13,7 +13,7 @@ class SudokuHandler implements SolutionHandler{
 
     public void handleSolution(List<DancingNode> answer){
         int[][] result = parseBoard(answer);
-        printSolution(result);
+        AbstractSudokuSolver.printSolution(result);
     }
 
     private int[][] parseBoard(List<DancingNode> answer){
@@ -38,16 +38,7 @@ class SudokuHandler implements SolutionHandler{
         return result;
     }
 
-    private void printSolution(int[][] result){
-        for(int i = 0; i < size; i++){
-            String ret = "";
-            for(int j = 0; j < size; j++){
-                ret += result[i][j] + " ";
-            }
-            System.out.println(ret);
-        }
-        System.out.println();
-    }
+
 
     public SudokuHandler(int boardSize){
         size = boardSize;
