@@ -37,6 +37,8 @@ public class NaiveSudokuSolver extends AbstractSudokuSolver{
             if(board[i][col] == c) return false;
         }
         
+        // Check subsquare
+        
         int rowStart = row - row % side; 
         int colStart = col - col % side;
         
@@ -48,6 +50,8 @@ public class NaiveSudokuSolver extends AbstractSudokuSolver{
         return true;
     }
 
+    
+   
     protected void runSolver(int[][] sudoku){
         solve(sudoku,0);
     }

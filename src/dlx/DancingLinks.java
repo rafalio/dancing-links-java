@@ -7,6 +7,8 @@ package dlx;
 import java.util.*;
 
 public class DancingLinks{
+    
+    static final boolean verbose = true;
 
     class DancingNode{
         DancingNode L, R, U, D;
@@ -34,19 +36,23 @@ public class DancingLinks{
         void unlinkLR(){
             this.L.R = this.R;
             this.R.L = this.L;
+            updates++;
         }
 
         void relinkLR(){
             this.L.R = this.R.L = this;
+            updates++;
         }
 
         void unlinkUD(){
             this.U.D = this.D;
             this.D.U = this.U;
+            updates++;
         }
 
         void relinkUD(){
             this.U.D = this.D.U = this;
+            updates++;
         }
 
         public DancingNode(){
@@ -78,6 +84,7 @@ public class DancingLinks{
                     j.C.size--;
                 }
             }
+            header.size--; // not part of original
         }
 
         void uncover(){
@@ -88,21 +95,27 @@ public class DancingLinks{
                 }
             }
             relinkLR();
+            header.size++; // not part of original
         }
     }
 
     private ColumnNode header;
     private int solutions = 0;
+    private int updates = 0;
     private SolutionHandler handler;
     private List<DancingNode> answer;
 
     // Heart of the algorithm
     private void search(int k){
         if (header.R == header){ // all the columns removed
-            System.out.println("-----------------------------------------");
-            System.out.println("Solution #" + solutions + "\n");
+            if(verbose){
+                System.out.println("-----------------------------------------");
+                System.out.println("Solution #" + solutions + "\n");
+            }
             handler.handleSolution(answer);
-            System.out.println("-----------------------------------------");
+            if(verbose){
+                System.out.println("-----------------------------------------");
+            }
             solutions++;
         } else{
             ColumnNode c = selectColumnNodeHeuristic();
@@ -141,6 +154,28 @@ public class DancingLinks{
                 ret = c;
             }
         }
+        return ret;
+    }
+    
+    // Ha, another Knuth algorithm
+    private ColumnNode selectColumnNodeRandom(){ // select a column randomly
+        ColumnNode ptr = (ColumnNode) header.R;
+        ColumnNode ret = null;
+        int c = 1;
+        while(ptr != header){
+            if(Math.random() <= 1/(double)c){
+                ret = ptr;
+            }
+            c++;
+            ptr = (ColumnNode) ptr.R;
+        }
+        return ret;
+    }
+    
+    private ColumnNode selectColumnNodeNth(int n){
+        int go = n % header.size;
+        ColumnNode ret = (ColumnNode) header.R;
+        for(int i = 0; i < go; i++) ret = (ColumnNode) ret.R;
         return ret;
     }
 
@@ -190,7 +225,13 @@ public class DancingLinks{
             }
         }
 
+        headerNode.size = COLS;
+        
         return headerNode;
+    }
+    
+    private void showInfo(){
+        System.out.println("Number of updates: " + updates);
     }
 
     // Grid consists solely of 1s and 0s. Undefined behaviour otherwise
@@ -205,8 +246,10 @@ public class DancingLinks{
 
     public void runSolver(){
         solutions = 0;
+        updates = 0;
         answer = new LinkedList<DancingNode>();
         search(0);
+        if(verbose) showInfo();
     }
 
 }
